@@ -161,12 +161,17 @@
          </item>
          <item>
           <property name="text">
-           <string>Brown</string>
+           <string>Magenta</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>Purple</string>
+           <string>Yellow</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Custom</string>
           </property>
          </item>
         </widget>
@@ -323,7 +328,7 @@
      <x>0</x>
      <y>0</y>
      <width>1060</width>
-     <height>27</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

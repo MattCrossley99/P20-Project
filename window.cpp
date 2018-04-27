@@ -8,7 +8,9 @@
 #include <QString>
 #include <QDebug>
 #include <QThread>
+#include <QColorDialog>
 #include "sendWorker.h"
+#include "receiveWorker.h"
 
 Window::Window(QWidget *parent) :
     QMainWindow(parent),
@@ -24,8 +26,13 @@ Window::Window(QWidget *parent) :
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),sendworker,SLOT(sendMouseMoved(QPointF)), Qt::QueuedConnection);
     connect(&canvas_send,SIGNAL(signalPressCoord(QPointF)), sendworker, SLOT(sendMousePressed(QPointF)), Qt::QueuedConnection);
     connect(&canvas_send,SIGNAL(signalRelease()), sendworker, SLOT(sendMouseReleased()), Qt::QueuedConnection);
+    QThread *receiveThread = new QThread;
+    receiveWorker *receiveworker = new receiveWorker;
+    receiveworker->moveToThread(receiveThread);
+    //add receive connects
 
     sendThread->start();
+    receiveThread->start();
 
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),this,SLOT(sendWindow_mouseMoved(QPointF)));
 
@@ -50,6 +57,7 @@ void Window::on_actionQuit_triggered()
 
 void Window::sendWindow_mouseMoved(QPointF point)
 {
+    pen_send.setColor(penColour);
     ui->xMousePos->setPlainText(QString::number(point.x()));
     ui->yMousePos->setPlainText(QString::number(point.y()));
     if(QApplication::mouseButtons() == Qt::LeftButton && mousePrevX != 0 && mousePrevY != 0){
@@ -66,4 +74,33 @@ void Window::on_actionClear_triggered()
     this->canvas_send.clear();
     emit signalSendCanvasCleared();
     //transmission thread: send a clear command
+}
+
+void Window::on_comboBox_2_activated(int index)
+{
+    switch (index) {
+    case 0:
+        penColour = Qt::black;
+        break;
+    case 1:
+        penColour = Qt::red;
+        break;
+    case 2:
+        penColour = Qt::blue;
+        break;
+    case 3:
+        penColour = Qt::green;
+        break;
+    case 4:
+        penColour = Qt::magenta;
+        break;
+    case 5:
+        penColour = Qt::yellow;
+        break;
+    case 6:
+        penColour = QColorDialog::getColor(penColour, this);
+        break;
+    default:
+        break;
+    }
 }
