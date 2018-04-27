@@ -83,21 +83,24 @@ void Window::on_comboBox_2_activated(int index)
         penColour = Qt::black;
         break;
     case 1:
-        penColour = Qt::red;
+        penColour = Qt::white;
         break;
     case 2:
-        penColour = Qt::blue;
+        penColour = Qt::red;
         break;
     case 3:
-        penColour = Qt::green;
+        penColour = Qt::blue;
         break;
     case 4:
-        penColour = Qt::magenta;
+        penColour = Qt::green;
         break;
     case 5:
-        penColour = Qt::yellow;
+        penColour = Qt::magenta;
         break;
     case 6:
+        penColour = Qt::yellow;
+        break;
+    case 7:
         penColour = QColorDialog::getColor(penColour, this);
         break;
     default:
@@ -109,4 +112,31 @@ void Window::on_comboBox_2_activated(int index)
 void Window::on_spinBox_valueChanged(int arg1)
 {
     pen_send.setWidth(arg1);
+}
+
+void Window::on_comboBox_activated(int index)
+{
+    switch (index) {
+    case 0:
+        send_backgroundColour = Qt::white;
+        break;
+    case 1:
+        send_backgroundColour = Qt::black;
+        break;
+    case 2:
+        send_backgroundColour = Qt::cyan;
+        break;
+    case 3:
+        send_backgroundColour = Qt::magenta;
+        break;
+    case 4:
+        send_backgroundColour = Qt::yellow;
+        break;
+    case 5:
+        send_backgroundColour = QColorDialog::getColor(send_backgroundColour, this);
+        break;
+    default:
+        break;
+    }
+    canvas_send.setBackgroundBrush(send_backgroundColour);
 }

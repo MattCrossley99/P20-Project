@@ -40,7 +40,7 @@
      <rect>
       <x>10</x>
       <y>0</y>
-      <width>392</width>
+      <width>422</width>
       <height>41</height>
      </rect>
     </property>
@@ -72,27 +72,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Dash Style:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboBox">
-       <item>
-        <property name="text">
-         <string>Solid</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>- - - -</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Colour:</string>
@@ -108,6 +87,11 @@
        </item>
        <item>
         <property name="text">
+         <string>White</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Red</string>
         </property>
        </item>
@@ -119,6 +103,47 @@
        <item>
         <property name="text">
          <string>Green</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Magenta</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Yellow</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Custom</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Background Colour:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboBox">
+       <item>
+        <property name="text">
+         <string>White</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Black</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Cyan</string>
         </property>
        </item>
        <item>
