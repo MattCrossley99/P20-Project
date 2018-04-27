@@ -40,6 +40,7 @@ Window::Window(QWidget *parent) :
     canvas_send.setSceneRect(0,0,512,480);
     ui->graphicsView_receive->setScene(&canvas_receive);
     canvas_receive.setSceneRect(0,0,512,480);
+    pen_send.setCapStyle(Qt::RoundCap);
 }
 
 Window::~Window()
@@ -57,7 +58,6 @@ void Window::on_actionQuit_triggered()
 
 void Window::sendWindow_mouseMoved(QPointF point)
 {
-    pen_send.setColor(penColour);
     ui->xMousePos->setPlainText(QString::number(point.x()));
     ui->yMousePos->setPlainText(QString::number(point.y()));
     if(QApplication::mouseButtons() == Qt::LeftButton && mousePrevX != 0 && mousePrevY != 0){
@@ -103,4 +103,10 @@ void Window::on_comboBox_2_activated(int index)
     default:
         break;
     }
+    pen_send.setColor(penColour);
+}
+
+void Window::on_spinBox_valueChanged(int arg1)
+{
+    pen_send.setWidth(arg1);
 }
