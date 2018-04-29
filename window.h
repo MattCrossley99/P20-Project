@@ -28,6 +28,12 @@ private slots:
 
     void on_actionClear_triggered();
 
+    void on_comboBox_2_activated(int index);
+
+    void on_spinBox_valueChanged(int arg1);
+
+    void on_comboBox_activated(int index);
+
 private:
     Ui::Window *ui;
     advancedScene canvas_send;
@@ -38,6 +44,8 @@ private:
     qreal mousePrevY = 0;
     qreal rcvPrevX = 0;
     qreal rcvPrevY = 0;
+    QColor penColour;
+    QColor send_backgroundColour;
 };
 
 #endif // WINDOW_H
