@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include <QPointF>
+#include <QColor>
 
 class sendWorker : public QObject
 {
@@ -17,6 +18,7 @@ public slots:
     void sendMouseMoved(QPointF point);
     void sendMousePressed(QPointF point);
     void sendMouseReleased();
+    void sendUpdateModifiers(QColor pen, QColor bg, int width);
 
 };
 

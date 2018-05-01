@@ -26,6 +26,7 @@ Window::Window(QWidget *parent) :
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),sendworker,SLOT(sendMouseMoved(QPointF)), Qt::QueuedConnection);
     connect(&canvas_send,SIGNAL(signalPressCoord(QPointF)), sendworker, SLOT(sendMousePressed(QPointF)), Qt::QueuedConnection);
     connect(&canvas_send,SIGNAL(signalRelease()), sendworker, SLOT(sendMouseReleased()), Qt::QueuedConnection);
+    connect(this, SIGNAL(signalUpdateModifiers(QColor,QColor,int)),sendworker, SLOT(sendUpdateModifiers(QColor,QColor,int)), Qt::QueuedConnection);
     QThread *receiveThread = new QThread;
     receiveWorker *receiveworker = new receiveWorker;
     receiveworker->moveToThread(receiveThread);
@@ -105,11 +106,13 @@ void Window::on_comboBox_2_activated(int index)
         break;
     }
     pen_send.setColor(penColour);
+    emit signalUpdateModifiers(pen_send.color(),canvas_send.backgroundBrush().color(),pen_send.width());
 }
 
 void Window::on_spinBox_valueChanged(int arg1)
 {
     pen_send.setWidth(arg1);
+    emit signalUpdateModifiers(pen_send.color(),canvas_send.backgroundBrush().color(),pen_send.width());
 }
 
 void Window::on_comboBox_activated(int index)
@@ -137,4 +140,5 @@ void Window::on_comboBox_activated(int index)
         break;
     }
     canvas_send.setBackgroundBrush(send_backgroundColour);
+    emit signalUpdateModifiers(pen_send.color(),canvas_send.backgroundBrush().color(),pen_send.width());
 }

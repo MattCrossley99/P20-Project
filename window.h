@@ -20,6 +20,7 @@ public:
 
 signals:
     void signalSendCanvasCleared();
+    void signalUpdateModifiers(QColor pen, QColor bg, int width);
     
 private slots:
     void on_actionQuit_triggered();
