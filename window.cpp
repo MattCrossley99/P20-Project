@@ -36,6 +36,7 @@ Window::Window(QWidget *parent) :
     receiveThread->start();
 
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),this,SLOT(sendWindow_mouseMoved(QPointF)));
+    connect(&canvas_send,SIGNAL(signalPressCoord(QPointF)),this,SLOT(sendWindow_mousePressed(QPointF)));
 
     ui->graphicsView_send->setScene(&canvas_send);
     canvas_send.setSceneRect(0,0,512,480);
@@ -65,6 +66,11 @@ void Window::sendWindow_mouseMoved(QPointF point)
     mousePrevX = point.x();
     mousePrevY = point.y();
     //transmission thread: send coords and a move command
+}
+
+void Window::sendWindow_mousePressed(QPointF point){
+    mousePrevX = point.x();
+    mousePrevY = point.y();
 }
 
 

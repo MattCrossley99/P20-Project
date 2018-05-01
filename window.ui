@@ -29,7 +29,7 @@
    </size>
   </property>
   <property name="mouseTracking">
-   <bool>true</bool>
+   <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>Gaming Whiteboard with Chroma</string>
@@ -194,7 +194,7 @@
      </sizepolicy>
     </property>
     <property name="mouseTracking">
-     <bool>true</bool>
+     <bool>false</bool>
     </property>
     <property name="verticalScrollBarPolicy">
      <enum>Qt::ScrollBarAlwaysOff</enum>

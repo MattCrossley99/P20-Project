@@ -20,6 +20,8 @@ public slots:
     void sendMouseReleased();
     void sendUpdateModifiers(QColor pen, QColor bg, int width);
 
+private:
+    void send(QString command);
 };
 
 #endif // SENDWORKER_H

@@ -27,6 +27,8 @@ private slots:
 
     void sendWindow_mouseMoved(QPointF point);
 
+    void sendWindow_mousePressed(QPointF point);
+
     void on_actionClear_triggered();
 
     void on_comboBox_2_activated(int index);
