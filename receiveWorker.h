@@ -7,7 +7,7 @@ class receiveWorker : public QObject
 {
     Q_OBJECT
 public:
-    explicit receiveWorker(QObject *parent = nullptr);
+    explicit receiveWorker(QObject *parent = 0);
 
 signals:
 

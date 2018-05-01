@@ -58,8 +58,6 @@ void Window::on_actionQuit_triggered()
 
 void Window::sendWindow_mouseMoved(QPointF point)
 {
-    ui->xMousePos->setPlainText(QString::number(point.x()));
-    ui->yMousePos->setPlainText(QString::number(point.y()));
     if(QApplication::mouseButtons() == Qt::LeftButton && mousePrevX != 0 && mousePrevY != 0){
         this->canvas_send.addLine(mousePrevX,mousePrevY,point.x(),point.y(),this->pen_send);
     }
