@@ -3,5 +3,8 @@
 #include <QPointF>
 #include <QDebug>
 
-receiveWorker::receiveWorker(QObject *parent) : QObject(parent) {}
+receiveWorker::receiveWorker(QObject *parent) :
+    QObject(parent)
+{
+}
 

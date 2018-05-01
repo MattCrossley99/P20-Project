@@ -16,7 +16,6 @@ SOURCES += main.cpp\
         window.cpp \
     advancedScene.cpp \
     sendWorker.cpp \
-    receiveWorker.cpp \
     receiveWorker.cpp
 
 HEADERS  += window.h \
