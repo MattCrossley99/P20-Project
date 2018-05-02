@@ -15,12 +15,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
         window.cpp \
     advancedScene.cpp \
-    sendWorker.cpp
+    sendWorker.cpp \
+    receiveWorker.cpp
 
 HEADERS  += window.h \
     advancedScene.h \
-    sendWorker.h
+    sendWorker.h \
+    receiveWorker.h
 
 FORMS    += window.ui
+
+LIBS += -L/usr/local/lib -lwiringPi -lpthread
 
 

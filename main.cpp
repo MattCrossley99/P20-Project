@@ -2,7 +2,7 @@
 #include <QDebug>
 
 #include <pthread.h>
-//#include <wiringPi.h>
+#include <wiringPi.h>
 
 #include "window.h"
 

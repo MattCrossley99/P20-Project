@@ -20,13 +20,30 @@ public:
 
 signals:
     void signalSendCanvasCleared();
+    void signalUpdateModifiers(QColor pen, QColor bg, int width);
     
 private slots:
     void on_actionQuit_triggered();
 
     void sendWindow_mouseMoved(QPointF point);
 
+    void sendWindow_mousePressed(QPointF point);
+
     void on_actionClear_triggered();
+
+    void on_comboBox_2_activated(int index);
+
+    void on_spinBox_valueChanged(int arg1);
+
+    void on_comboBox_activated(int index);
+
+    void receiveWindow_updateMods(QColor fg, QColor bg, int width);
+
+    void receiveWindow_clearScreen();
+
+    void receiveWindow_PenDown(int x, int y);
+
+    void receiveWindow_Move(int x, int y);
 
 private:
     Ui::Window *ui;
@@ -38,6 +55,8 @@ private:
     qreal mousePrevY = 0;
     qreal rcvPrevX = 0;
     qreal rcvPrevY = 0;
+    QColor penColour;
+    QColor send_backgroundColour;
 };
 
 #endif // WINDOW_H
