@@ -37,6 +37,8 @@ private slots:
 
     void on_comboBox_activated(int index);
 
+    void receiveWindow_updateMods(QColor fg, QColor bg, int width);
+
 private:
     Ui::Window *ui;
     advancedScene canvas_send;

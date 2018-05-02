@@ -16,18 +16,32 @@ advancedScene::~advancedScene()
 }
 
 void advancedScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-    emit signalMouseCoord(event->scenePos());
+    QPointF *holdingPoint = new QPointF;
+    *holdingPoint = event->scenePos();
+    if(holdingPoint->x() > 512){
+        holdingPoint->setX(512);
+    }
+    if(holdingPoint->y() > 480){
+         holdingPoint->setY(480);
+    }
+    if(holdingPoint->x() < 0){
+        holdingPoint->setX(0);
+    }
+    if(holdingPoint->y() < 0){
+         holdingPoint->setY(0);
+    }
+    emit signalMouseCoord(*holdingPoint);
     //qDebug() << "x:" << event->scenePos().x() << " y:" << event->scenePos().y();
 }
 
 void advancedScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     QPointF *holdingPoint = new QPointF;
     *holdingPoint = event->scenePos();
-    if(holdingPoint->x() > 480){
-        holdingPoint->setX(480);
+    if(holdingPoint->x() > 512){
+        holdingPoint->setX(512);
     }
-    if(holdingPoint->y() > 512){
-         holdingPoint->setY(512);
+    if(holdingPoint->y() > 480){
+         holdingPoint->setY(480);
     }
     emit signalPressCoord(*holdingPoint);
 }

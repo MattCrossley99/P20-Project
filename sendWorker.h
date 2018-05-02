@@ -5,6 +5,8 @@
 #include <QThread>
 #include <QPointF>
 #include <QColor>
+#include <QDataStream>
+#include <QByteArray>
 
 class sendWorker : public QObject
 {
@@ -12,7 +14,7 @@ class sendWorker : public QObject
 public:
     explicit sendWorker(QObject *parent = 0);
 signals:
-
+    void sendPacket(QByteArray output);
 public slots:
     void sendTriggeredClear();
     void sendMouseMoved(QPointF point);

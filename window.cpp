@@ -11,6 +11,7 @@
 #include <QColorDialog>
 #include "sendWorker.h"
 #include "receiveWorker.h"
+#include <QBuffer>
 
 Window::Window(QWidget *parent) :
     QMainWindow(parent),
@@ -31,10 +32,10 @@ Window::Window(QWidget *parent) :
     receiveWorker *receiveworker = new receiveWorker;
     receiveworker->moveToThread(receiveThread);
     //add receive connects
-
+    connect(sendworker, SIGNAL(sendPacket(QByteArray)), receiveworker, SLOT(receivePacket(QByteArray)), Qt::QueuedConnection);
+    connect(receiveworker, SIGNAL(rcvUpdateModifiers(QColor,QColor,int)), this, SLOT(receiveWindow_updateMods(QColor,QColor,int)), Qt::QueuedConnection);
     sendThread->start();
     receiveThread->start();
-
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),this,SLOT(sendWindow_mouseMoved(QPointF)));
     connect(&canvas_send,SIGNAL(signalPressCoord(QPointF)),this,SLOT(sendWindow_mousePressed(QPointF)));
 
@@ -148,3 +149,9 @@ void Window::on_comboBox_activated(int index)
     canvas_send.setBackgroundBrush(send_backgroundColour);
     emit signalUpdateModifiers(pen_send.color(),canvas_send.backgroundBrush().color(),pen_send.width());
 }
+
+ void Window::receiveWindow_updateMods(QColor fg, QColor bg, int width) {
+     canvas_receive.setBackgroundBrush(bg);
+     pen_receive.setColor(fg);
+     pen_receive.setWidth(width);
+ }

@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QColor>
 #include <QDataStream>
-#include <QFile>
+#include <QBuffer>
 
 
 sendWorker::sendWorker(QObject *parent) :
@@ -19,16 +19,45 @@ void sendWorker::sendTriggeredClear() {
 void sendWorker::sendMouseMoved(QPointF point) {
     QString coords;
     coords.append("MV");
-    coords.append(QString::number(point.x()));
-    coords.append(QString::number(point.y()));
+    QString x2 = QString::number(point.x());
+    QString y2 = QString::number(point.y());
+    if (point.x() < 100) {
+        x2.prepend("0");
+    }
+    if (point.x() < 10) {
+        x2.prepend("0");
+    }
+    if (point.y() < 100) {
+        y2.prepend("0");
+    }
+    if (point.y() < 10) {
+        y2.prepend("0");
+    }
+    coords.append(x2);
+    coords.append(y2);
     send(coords);
 }
 
 void sendWorker::sendMousePressed(QPointF point) {
     QString coords;
+
     coords.append("PD");
-    coords.append(QString::number(point.x()));
-    coords.append(QString::number(point.y()));
+    QString x2 = QString::number(point.x());
+    QString y2 = QString::number(point.y());
+    if (point.x() < 100) {
+        x2.prepend("0");
+    }
+    if (point.x() < 10) {
+        x2.prepend("0");
+    }
+    if (point.y() < 100) {
+        y2.prepend("0");
+    }
+    if (point.y() < 10) {
+        y2.prepend("0");
+    }
+    coords.append(x2);
+    coords.append(y2);
     send(coords);
 }
 
@@ -55,8 +84,7 @@ void sendWorker::send(QString command){
     output.append("O");
     output.append(command);
     output.append("E");
-    QFile file("testoutput.dat");
-    file.open(QIODevice::WriteOnly);
-    QDataStream out(&file);
-    out << output;
+    qDebug() << "Sent: " << output;
+    QByteArray sendArray = output.toUtf8();
+    emit sendPacket(sendArray);
 }
