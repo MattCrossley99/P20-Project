@@ -35,6 +35,8 @@ Window::Window(QWidget *parent) :
     connect(sendworker, SIGNAL(sendPacket(QByteArray)), receiveworker, SLOT(receivePacket(QByteArray)), Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvUpdateModifiers(QColor,QColor,int)), this, SLOT(receiveWindow_updateMods(QColor,QColor,int)), Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvClearWindow()), this, SLOT(receiveWindow_clearScreen()), Qt::QueuedConnection);
+    connect(receiveworker, SIGNAL(rcvPenDown(int,int)),this,SLOT(receiveWindow_PenDown(int,int)),Qt::QueuedConnection);
+    connect(receiveworker, SIGNAL(rcvMove(int,int)), this, SLOT(receiveWindow_Move(int,int)), Qt::QueuedConnection);
     sendThread->start();
     receiveThread->start();
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),this,SLOT(sendWindow_mouseMoved(QPointF)));
@@ -45,6 +47,7 @@ Window::Window(QWidget *parent) :
     ui->graphicsView_receive->setScene(&canvas_receive);
     canvas_receive.setSceneRect(0,0,512,480);
     pen_send.setCapStyle(Qt::RoundCap);
+    pen_receive.setCapStyle(Qt::RoundCap);
 }
 
 Window::~Window()
@@ -159,4 +162,17 @@ void Window::on_comboBox_activated(int index)
 
  void Window::receiveWindow_clearScreen() {
      canvas_receive.clear();
+ }
+
+ void Window::receiveWindow_PenDown(int x, int y) {
+     rcvPrevX = x;
+     rcvPrevY = y;
+     qDebug() << "Pen Down";
+ }
+
+ void Window::receiveWindow_Move(int x, int y) {
+     canvas_receive.addLine(rcvPrevX,rcvPrevY,x,y,pen_receive);
+     rcvPrevX = x;
+     rcvPrevY = y;
+     qDebug() << "Drawing";
  }

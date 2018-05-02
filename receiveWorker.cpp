@@ -34,9 +34,15 @@ void receiveWorker::analysePacket(QString input) {
     }
     if (commandCode == "PD") {
         //pendown
+        int x = input.mid(3,3).toInt();
+        int y = input.mid(6,3).toInt();
+        emit rcvPenDown(x,y);
     }
     if (commandCode == "MV") {
         //move pen
+        int x = input.mid(3,3).toInt();
+        int y = input.mid(6,3).toInt();
+        emit rcvMove(x,y);
     }
     if (commandCode == "CL") {
         //clear canvas

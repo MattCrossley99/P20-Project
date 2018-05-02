@@ -41,6 +41,10 @@ private slots:
 
     void receiveWindow_clearScreen();
 
+    void receiveWindow_PenDown(int x, int y);
+
+    void receiveWindow_Move(int x, int y);
+
 private:
     Ui::Window *ui;
     advancedScene canvas_send;

@@ -18,6 +18,8 @@ public:
 signals:
     void rcvUpdateModifiers(QColor pen, QColor bg, int width);
     void rcvClearWindow();
+    void rcvPenDown(int x, int y);
+    void rcvMove(int x, int y);
 
 public slots:
     void receivePacket(QByteArray input);
