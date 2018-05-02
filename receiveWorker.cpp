@@ -16,34 +16,33 @@ receiveWorker::receiveWorker(QObject *parent) :
 
 void receiveWorker::receivePacket(QByteArray input) {
    QString inputCommand;
-   qDebug() << "Received: " << input;
    inputCommand = input;
-   qDebug() << "Converted: " << inputCommand;
    analysePacket(input);
+   qDebug() << "Returned from analysis";
 }
 
 void receiveWorker::analysePacket(QString input) {
-    if(input[0] =! "O"){
+    if(input[0] != QChar('O')){
+        qDebug() << "Packet error";
         return;
     }
     QString commandCode;
     commandCode.append(input[1]);
     commandCode.append(input[2]);
-    enum
-    switch (commandCode)
-    case "PU":
+    if (commandCode == "PU") {
         //penup
-    case "PD":
+    }
+    if (commandCode == "PD") {
         //pendown
-    case "MV":
-        //move
-    case "AK":
-        //acknowledge
-    case "RQ":
-        //request acknowledge
-    case "CL":
+    }
+    if (commandCode == "MV") {
+        //move pen
+    }
+    if (commandCode == "CL") {
         //clear canvas
-    case "UM":
+        emit rcvClearWindow();
+    }
+    if (commandCode == "UM") {
         QColor fg;
         QColor bg;
         int width;
@@ -59,7 +58,6 @@ void receiveWorker::analysePacket(QString input) {
         holder += input.midRef(11,6);
         bg.setNamedColor(holder);
         emit rcvUpdateModifiers(fg, bg, width);
-
-    default:
-        return;
+    }
+    return;
 }

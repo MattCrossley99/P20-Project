@@ -34,6 +34,7 @@ Window::Window(QWidget *parent) :
     //add receive connects
     connect(sendworker, SIGNAL(sendPacket(QByteArray)), receiveworker, SLOT(receivePacket(QByteArray)), Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvUpdateModifiers(QColor,QColor,int)), this, SLOT(receiveWindow_updateMods(QColor,QColor,int)), Qt::QueuedConnection);
+    connect(receiveworker, SIGNAL(rcvClearWindow()), this, SLOT(receiveWindow_clearScreen()), Qt::QueuedConnection);
     sendThread->start();
     receiveThread->start();
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),this,SLOT(sendWindow_mouseMoved(QPointF)));
@@ -77,7 +78,7 @@ void Window::sendWindow_mousePressed(QPointF point){
 
 void Window::on_actionClear_triggered()
 {
-    this->canvas_send.clear();
+    canvas_send.clear();
     emit signalSendCanvasCleared();
     //transmission thread: send a clear command
 }
@@ -154,4 +155,8 @@ void Window::on_comboBox_activated(int index)
      canvas_receive.setBackgroundBrush(bg);
      pen_receive.setColor(fg);
      pen_receive.setWidth(width);
+ }
+
+ void Window::receiveWindow_clearScreen() {
+     canvas_receive.clear();
  }

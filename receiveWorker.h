@@ -17,6 +17,7 @@ public:
 
 signals:
     void rcvUpdateModifiers(QColor pen, QColor bg, int width);
+    void rcvClearWindow();
 
 public slots:
     void receivePacket(QByteArray input);

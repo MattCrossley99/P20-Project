@@ -39,6 +39,8 @@ private slots:
 
     void receiveWindow_updateMods(QColor fg, QColor bg, int width);
 
+    void receiveWindow_clearScreen();
+
 private:
     Ui::Window *ui;
     advancedScene canvas_send;
