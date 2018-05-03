@@ -18,7 +18,7 @@ void receiveWorker::receivePacket(QByteArray input) {
    QString inputCommand;
    inputCommand = input;
    analysePacket(input);
-   qDebug() << "Returned from analysis";
+   //qDebug() << "Returned from analysis";
 }
 
 void receiveWorker::analysePacket(QString input) {

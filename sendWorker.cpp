@@ -84,7 +84,7 @@ void sendWorker::send(QString command){
     output.append("O");
     output.append(command);
     output.append("E");
-    qDebug() << "Sent: " << output;
+    //qDebug() << "Sent: " << output;
     QByteArray sendArray = output.toUtf8();
     emit sendPacket(sendArray);
 }

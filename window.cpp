@@ -1,5 +1,8 @@
 #include "window.h"
 #include "ui_window.h"
+#include "sendWorker.h"
+#include "receiveWorker.h"
+#include "gpioWorker.h"
 
 #include <QMessageBox>
 #include <QApplication>
@@ -9,8 +12,6 @@
 #include <QDebug>
 #include <QThread>
 #include <QColorDialog>
-#include "sendWorker.h"
-#include "receiveWorker.h"
 #include <QBuffer>
 
 Window::Window(QWidget *parent) :
@@ -28,19 +29,31 @@ Window::Window(QWidget *parent) :
     connect(&canvas_send,SIGNAL(signalPressCoord(QPointF)), sendworker, SLOT(sendMousePressed(QPointF)), Qt::QueuedConnection);
     connect(&canvas_send,SIGNAL(signalRelease()), sendworker, SLOT(sendMouseReleased()), Qt::QueuedConnection);
     connect(this, SIGNAL(signalUpdateModifiers(QColor,QColor,int)),sendworker, SLOT(sendUpdateModifiers(QColor,QColor,int)), Qt::QueuedConnection);
+
     QThread *receiveThread = new QThread;
     receiveWorker *receiveworker = new receiveWorker;
     receiveworker->moveToThread(receiveThread);
-    //add receive connects
-    connect(sendworker, SIGNAL(sendPacket(QByteArray)), receiveworker, SLOT(receivePacket(QByteArray)), Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvUpdateModifiers(QColor,QColor,int)), this, SLOT(receiveWindow_updateMods(QColor,QColor,int)), Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvClearWindow()), this, SLOT(receiveWindow_clearScreen()), Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvPenDown(int,int)),this,SLOT(receiveWindow_PenDown(int,int)),Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvMove(int,int)), this, SLOT(receiveWindow_Move(int,int)), Qt::QueuedConnection);
+
+    QThread *gpioThread = new QThread;
+    gpioWorker *gpioworker = new gpioWorker;
+    gpioworker->moveToThread(gpioThread);
+
+    //these are very important
+    connect(sendworker, SIGNAL(sendPacket(QByteArray)), gpioworker, SLOT(incomingData(QByteArray)), Qt::QueuedConnection);
+    connect(gpioworker, SIGNAL(outgoingData(QByteArray)), receiveworker, SLOT(receivePacket(QByteArray)), Qt::QueuedConnection);
+
     sendThread->start();
     receiveThread->start();
+    gpioThread->start();
+
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),this,SLOT(sendWindow_mouseMoved(QPointF)));
     connect(&canvas_send,SIGNAL(signalPressCoord(QPointF)),this,SLOT(sendWindow_mousePressed(QPointF)));
+
+
 
     ui->graphicsView_send->setScene(&canvas_send);
     canvas_send.setSceneRect(0,0,512,480);
@@ -169,12 +182,12 @@ void Window::on_comboBox_activated(int index)
  void Window::receiveWindow_PenDown(int x, int y) {
      rcvPrevX = x;
      rcvPrevY = y;
-     qDebug() << "Pen Down";
+     //qDebug() << "Pen Down";
  }
 
  void Window::receiveWindow_Move(int x, int y) {
      canvas_receive.addLine(rcvPrevX,rcvPrevY,x,y,pen_receive);
      rcvPrevX = x;
      rcvPrevY = y;
-     qDebug() << "Drawing";
+     //qDebug() << "Drawing";
  }
