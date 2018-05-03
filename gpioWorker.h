@@ -16,6 +16,8 @@ public slots:
     void incomingData(QByteArray incBytes);
     void bitsToBytes(QBitArray bits);
 private:
+    bool data = 0;
+    bool sync = 0;
 
 };
 

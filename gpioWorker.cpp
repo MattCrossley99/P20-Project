@@ -21,7 +21,9 @@ void gpioWorker::incomingData(QByteArray incBytes){
         }
     }
     //qDebug() << "Bit array: " << commandBinary << endl;
-    bitsToBytes(commandBinary);
+    sync = 1;
+    writeToGPIO(commandBinary);
+    sync = 0;
 }
 
 void gpioWorker::bitsToBytes(QBitArray bits) {
@@ -32,4 +34,12 @@ void gpioWorker::bitsToBytes(QBitArray bits) {
         commandData[i/8] = (commandData.at(i/8) | ((bits[i]?1:0)<<(7-(i%8))));
     }
     emit outgoingData(commandData);
+}
+
+void gpioWorker::writeToGPIO(QBitArray bits){
+
+}
+
+QBitArray gpioWorker::readFromGPIO(){
+
 }
