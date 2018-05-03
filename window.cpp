@@ -44,8 +44,10 @@ Window::Window(QWidget *parent) :
 
     ui->graphicsView_send->setScene(&canvas_send);
     canvas_send.setSceneRect(0,0,512,480);
+    canvas_send.setBackgroundBrush(Qt::white);
     ui->graphicsView_receive->setScene(&canvas_receive);
     canvas_receive.setSceneRect(0,0,512,480);
+    canvas_receive.setBackgroundBrush(Qt::white);
     pen_send.setCapStyle(Qt::RoundCap);
     pen_receive.setCapStyle(Qt::RoundCap);
 }
