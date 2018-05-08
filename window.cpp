@@ -2,6 +2,7 @@
 #include "ui_window.h"
 #include "sendWorker.h"
 #include "receiveWorker.h"
+#include "listenWorker.h"
 
 #include <QMessageBox>
 #include <QApplication>
@@ -49,15 +50,15 @@ Window::Window(QWidget *parent) :
     QThread *listenThread = new QThread;
     listenWorker *listenworker = new listenWorker;
     //connects
-
+    connect(listenworker, SIGNAL(packetOut(QBitArray)), receiveworker, SLOT(receivePacket(QBitArray)), Qt::QueuedConnection);
+    connect(listenThread, &QThread::started, listenworker, SLOT(exec()));
 
     sendThread->start();
     receiveThread->start();
+    listenThread->start();
 
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),this,SLOT(sendWindow_mouseMoved(QPointF)));
     connect(&canvas_send,SIGNAL(signalPressCoord(QPointF)),this,SLOT(sendWindow_mousePressed(QPointF)));
-
-
 
     ui->graphicsView_send->setScene(&canvas_send);
     canvas_send.setSceneRect(0,0,512,480);

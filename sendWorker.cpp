@@ -113,7 +113,7 @@ void sendWorker::writeToGPIO(QBitArray data) {
         while (receiveReady == false) {}
         //qDebug() << gpioData << sendReady << receiveReady << " SR Low";
         sendReady = true;
-        qDebug() << gpioData << " S";
+        //qDebug() << gpioData << " S";
     }
     packetSent = 1;
 }

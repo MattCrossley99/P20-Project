@@ -25,7 +25,6 @@ signals:
 public slots:
     void receivePacket(QBitArray bits);
     void analysePacket(QString input);
-    void readFromGPIO();
 private:
 
 };

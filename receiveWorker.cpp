@@ -10,11 +10,6 @@
 #include <QBitArray>
 #include <QByteArray>
 
-extern bool gpioData;
-extern bool sendReady;
-extern bool receiveReady;
-extern bool packetSent;
-
 receiveWorker::receiveWorker(QObject *parent) :
     QObject(parent)
 {
@@ -82,21 +77,3 @@ void receiveWorker::analysePacket(QString input) {
     return;
 }
 
-void receiveWorker::readFromGPIO() {
-    /*QBitArray receiveStack;
-    receiveStack.resize(100);
-    int pos = 0;
-    while(packetSent == false) {
-        qDebug() << gpioData;
-        receiveReady = true;
-        while(sendReady == true) {};
-        receiveStack.setBit(pos,gpioData);
-        receiveReady = false;
-        pos++;
-        qDebug() << "looped, position = " << pos;
-    }
-    pos = 0;
-    qDebug() << receiveStack;
-    receivePacket(receiveStack);*/
-    qDebug() << "SLOT Activated";
-}
