@@ -105,15 +105,23 @@ void sendWorker::send(QString command){
 }
 
 void sendWorker::writeToGPIO(QBitArray data) {
-    emit sendReceive();
+    qDebug() << "5";
     packetSent = false;
+    qDebug() << "6";
     for(int i = 0; i < data.count(); i++) {
-        sendReady = false;
-        gpioData = data[i];
-        while (receiveReady == false) {}
-        //qDebug() << gpioData << sendReady << receiveReady << " SR Low";
+        qDebug() << "7";
         sendReady = true;
+        qDebug() << "8";
+        while (receiveReady == false) {}
+        qDebug() << "9";
+        gpioData = data[i];
+        qDebug() << "10";
+        //qDebug() << gpioData << sendReady << receiveReady << " SR Low";
+        sendReady = false;
+        qDebug() << "11";
+        while(receiveReady == true) {}
         //qDebug() << gpioData << " S";
     }
+    qDebug() << "12";
     packetSent = 1;
 }

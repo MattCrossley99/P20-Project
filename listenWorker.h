@@ -14,7 +14,7 @@ public:
 signals:
     void packetOut(QBitArray output);
 public slots:
-    int exec();
+        int exec();
 protected:
 
 };

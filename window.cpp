@@ -28,6 +28,7 @@ Window::Window(QWidget *parent) :
     gpioData = 0;
     sendReady = 1;
     receiveReady = 1;
+    packetSent=1;
 
     QThread *sendThread = new QThread;
     sendWorker *sendworker = new sendWorker;
@@ -49,9 +50,10 @@ Window::Window(QWidget *parent) :
 
     QThread *listenThread = new QThread;
     listenWorker *listenworker = new listenWorker;
+    listenworker->moveToThread(listenThread);
     //connects
     connect(listenworker, SIGNAL(packetOut(QBitArray)), receiveworker, SLOT(receivePacket(QBitArray)), Qt::QueuedConnection);
-    connect(listenThread, &QThread::started, listenworker, SLOT(exec()));
+    connect(listenThread, &QThread::started, listenworker, &listenWorker::exec);
 
     sendThread->start();
     receiveThread->start();
