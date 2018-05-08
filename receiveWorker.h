@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QByteArray>
+#include <QBitArray>
 #include <QColor>
 
 namespace Ui {
@@ -22,8 +23,11 @@ signals:
     void rcvMove(int x, int y);
 
 public slots:
-    void receivePacket(QByteArray input);
+    void receivePacket(QBitArray bits);
     void analysePacket(QString input);
+    void readFromGPIO();
+private:
+
 };
 
 #endif // RECEIVEWORKER_H

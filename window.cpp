@@ -2,7 +2,6 @@
 #include "ui_window.h"
 #include "sendWorker.h"
 #include "receiveWorker.h"
-#include "gpioWorker.h"
 
 #include <QMessageBox>
 #include <QApplication>
@@ -14,11 +13,20 @@
 #include <QColorDialog>
 #include <QBuffer>
 
+bool gpioData;
+bool sendReady;
+bool receiveReady;
+bool packetSent;
+
 Window::Window(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::Window)
 {
     ui->setupUi(this);
+
+    gpioData = 0;
+    sendReady = 1;
+    receiveReady = 1;
 
     QThread *sendThread = new QThread;
     sendWorker *sendworker = new sendWorker;
@@ -38,17 +46,13 @@ Window::Window(QWidget *parent) :
     connect(receiveworker, SIGNAL(rcvPenDown(int,int)),this,SLOT(receiveWindow_PenDown(int,int)),Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvMove(int,int)), this, SLOT(receiveWindow_Move(int,int)), Qt::QueuedConnection);
 
-    QThread *gpioThread = new QThread;
-    gpioWorker *gpioworker = new gpioWorker;
-    gpioworker->moveToThread(gpioThread);
+    QThread *listenThread = new QThread;
+    listenWorker *listenworker = new listenWorker;
+    //connects
 
-    //these are very important
-    connect(sendworker, SIGNAL(sendPacket(QByteArray)), gpioworker, SLOT(incomingData(QByteArray)), Qt::QueuedConnection);
-    connect(gpioworker, SIGNAL(outgoingData(QByteArray)), receiveworker, SLOT(receivePacket(QByteArray)), Qt::QueuedConnection);
 
     sendThread->start();
     receiveThread->start();
-    gpioThread->start();
 
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),this,SLOT(sendWindow_mouseMoved(QPointF)));
     connect(&canvas_send,SIGNAL(signalPressCoord(QPointF)),this,SLOT(sendWindow_mousePressed(QPointF)));

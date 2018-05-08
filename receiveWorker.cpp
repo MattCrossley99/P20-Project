@@ -7,6 +7,13 @@
 #include <QDataStream>
 #include <QColor>
 #include <QPen>
+#include <QBitArray>
+#include <QByteArray>
+
+extern bool gpioData;
+extern bool sendReady;
+extern bool receiveReady;
+extern bool packetSent;
 
 receiveWorker::receiveWorker(QObject *parent) :
     QObject(parent)
@@ -14,10 +21,17 @@ receiveWorker::receiveWorker(QObject *parent) :
 
 }
 
-void receiveWorker::receivePacket(QByteArray input) {
+void receiveWorker::receivePacket(QBitArray bits) {
+    QByteArray commandData;
+    commandData.resize(bits.count()/8+1);
+    commandData.fill(0);
+    for(int i=0; i<bits.count(); i++) {
+        commandData[i/8] = (commandData.at(i/8) | ((bits[i]?1:0)<<(7-(i%8))));
+   }
    QString inputCommand;
-   inputCommand = input;
-   analysePacket(input);
+   inputCommand = commandData;
+   qDebug() << inputCommand;
+   //analysePacket(inputCommand);
    //qDebug() << "Returned from analysis";
 }
 
@@ -66,4 +80,23 @@ void receiveWorker::analysePacket(QString input) {
         emit rcvUpdateModifiers(fg, bg, width);
     }
     return;
+}
+
+void receiveWorker::readFromGPIO() {
+    /*QBitArray receiveStack;
+    receiveStack.resize(100);
+    int pos = 0;
+    while(packetSent == false) {
+        qDebug() << gpioData;
+        receiveReady = true;
+        while(sendReady == true) {};
+        receiveStack.setBit(pos,gpioData);
+        receiveReady = false;
+        pos++;
+        qDebug() << "looped, position = " << pos;
+    }
+    pos = 0;
+    qDebug() << receiveStack;
+    receivePacket(receiveStack);*/
+    qDebug() << "SLOT Activated";
 }

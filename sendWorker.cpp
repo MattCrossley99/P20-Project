@@ -5,7 +5,13 @@
 #include <QColor>
 #include <QDataStream>
 #include <QBuffer>
+#include <QBitArray>
+#include <QByteArray>
 
+extern bool gpioData;
+extern bool sendReady;
+extern bool packetSent;
+extern bool receiveReady;
 
 sendWorker::sendWorker(QObject *parent) :
     QObject(parent)
@@ -80,11 +86,34 @@ void sendWorker::sendUpdateModifiers(QColor pen, QColor bg, int width) {
 }
 
 void sendWorker::send(QString command){
+
     QString output;
     output.append("O");
     output.append(command);
     output.append("E");
     //qDebug() << "Sent: " << output;
     QByteArray sendArray = output.toUtf8();
-    emit sendPacket(sendArray);
+    QBitArray commandBinary(sendArray.count()*8);
+
+    for(int i=0; i<sendArray.count(); i++) {
+        for(int j=0; j<8;j++) {
+            commandBinary.setBit(i*8+j, sendArray[i]&(1<<(7-j)));
+        }
+    }
+    qDebug() << "Bit array: " << commandBinary << endl;
+    writeToGPIO(commandBinary);
+}
+
+void sendWorker::writeToGPIO(QBitArray data) {
+    emit sendReceive();
+    packetSent = false;
+    for(int i = 0; i < data.count(); i++) {
+        sendReady = false;
+        gpioData = data[i];
+        while (receiveReady == false) {}
+        //qDebug() << gpioData << sendReady << receiveReady << " SR Low";
+        sendReady = true;
+        qDebug() << gpioData << " S";
+    }
+    packetSent = 1;
 }

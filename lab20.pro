@@ -16,14 +16,12 @@ SOURCES += main.cpp\
         window.cpp \
     advancedScene.cpp \
     sendWorker.cpp \
-    receiveWorker.cpp \
-    gpioWorker.cpp
+    receiveWorker.cpp
 
 HEADERS  += window.h \
     advancedScene.h \
     sendWorker.h \
-    receiveWorker.h \
-    gpioWorker.h
+    receiveWorker.h
 
 FORMS    += window.ui
 

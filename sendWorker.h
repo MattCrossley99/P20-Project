@@ -14,7 +14,7 @@ class sendWorker : public QObject
 public:
     explicit sendWorker(QObject *parent = 0);
 signals:
-    void sendPacket(QByteArray output);
+    void sendReceive();
 public slots:
     void sendTriggeredClear();
     void sendMouseMoved(QPointF point);
@@ -24,6 +24,7 @@ public slots:
 
 private:
     void send(QString command);
+    void writeToGPIO(QBitArray data);
 };
 
 #endif // SENDWORKER_H
