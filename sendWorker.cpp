@@ -109,19 +109,14 @@ void sendWorker::writeToGPIO(QBitArray data) {
     packetSent = false;
     qDebug() << "6";
     for(int i = 0; i < data.count(); i++) {
-        qDebug() << "7";
         sendReady = true;
-        qDebug() << "8";
-        while (receiveReady == false) {}
-        qDebug() << "9";
+        while(receiveReady == 0) {}
         gpioData = data[i];
-        qDebug() << "10";
-        //qDebug() << gpioData << sendReady << receiveReady << " SR Low";
+        //qDebug() << "Data sent: " << gpioData;
         sendReady = false;
-        qDebug() << "11";
         while(receiveReady == true) {}
-        //qDebug() << gpioData << " S";
+
     }
-    qDebug() << "12";
+    //qDebug() << "12";
     packetSent = 1;
 }

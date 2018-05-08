@@ -16,29 +16,31 @@ listenWorker::listenWorker(QObject *parent) :
 int listenWorker::exec() {
     qDebug() << "Listen thread started!";
     QBitArray receiveStack;
-    receiveStack.resize(256);
+    receiveStack.resize(150);
     int pos = 0;
     while(1) {
+        pos = 0;
+        //receiveStack.fill(false);
         while(packetSent == false) {
-            qDebug() << "0";
+            while (sendReady == false) {}
             receiveReady = true;
-            qDebug() << "1";
             while(sendReady == true) {}
-            qDebug() << "2";
-            receiveReady = false;
-            qDebug() << "3";
             receiveStack.setBit(pos,gpioData);
-            qDebug() << "4";
             pos++;
-            qDebug() << gpioData << "Position: " << pos;
+            if (pos > 144){
+                pos = 0;
+                break;
+            }
+            receiveReady = false;
+            qDebug() << "i am a debug";
+
         }
         //emit packetOut(receiveStack);
         //receiveStack.fill(false);
         if((pos==32) | (pos == 80) | (pos == 144)){
             pos = 0;
-            qDebug() << receiveStack;
+            //qDebug() << receiveStack;
             emit packetOut(receiveStack);
-            receiveStack.fill(false);
         }
         pos = 0;
     }
