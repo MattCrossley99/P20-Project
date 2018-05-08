@@ -1,12 +1,22 @@
 #include "listenWorker.h"
 #include <QBitArray>
 #include <QDebug>
+#include "wiringPi.h"
 
+/*pinMode(27,INPUT);
+pinMode(28,INPUT);
+pinMode(29,INPUT);
+pinMode(25,INPUT);*/
 
-extern bool gpioData;
+#define packetSent 27
+#define sendReady 28
+#define receiveReady 29
+#define gpioData 25
+
+/*extern bool gpioData;
 extern bool sendReady;
 extern bool receiveReady;
-extern bool packetSent;
+extern bool packetSent;*/
 
 listenWorker::listenWorker(QObject *parent) :
     QObject(parent)
@@ -21,17 +31,18 @@ int listenWorker::exec() {
     while(1) {
         pos = 0;
         //receiveStack.fill(false);
-        while(packetSent == false) {
-            while (sendReady == false) {}
-            receiveReady = true;
-            while(sendReady == true) {}
-            receiveStack.setBit(pos,gpioData);
+        while(digitalRead(packetSent) == 0) {
+            qDebug() << "1";
+            while (digitalRead(sendReady) == 0) {}
+            digitalWrite(receiveReady,HIGH);
+            while(digitalRead(sendReady) == 1) {}
+            receiveStack.setBit(pos,digitalRead(gpioData));
             pos++;
             if (pos > 144){
                 pos = 0;
                 break;
             }
-            receiveReady = false;
+            digitalWrite(receiveReady,LOW);
             qDebug() << "i am a debug";
 
         }

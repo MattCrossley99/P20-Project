@@ -27,6 +27,6 @@ HEADERS  += window.h \
 
 FORMS    += window.ui
 
-#LIBS += -L/usr/local/lib -lwiringPi -lpthread
+LIBS += -L/usr/local/lib -lwiringPi -lpthread
 
 

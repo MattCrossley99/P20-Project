@@ -4,14 +4,24 @@
 #include <QDebug>
 #include <QColor>
 #include <QDataStream>
-#include <QBuffer>
 #include <QBitArray>
 #include <QByteArray>
+#include "wiringPi.h"
 
-extern bool gpioData;
+/*pinMode(21,OUTPUT);
+pinMode(22,OUTPUT);
+pinMode(23,OUTPUT);
+pinMode(26,OUTPUT);*/
+
+#define packetSent 21
+#define sendReady 22
+#define receiveReady 23
+#define gpioData 26
+
+/*extern bool gpioData;
 extern bool sendReady;
 extern bool packetSent;
-extern bool receiveReady;
+extern bool receiveReady;*/
 
 sendWorker::sendWorker(QObject *parent) :
     QObject(parent)
@@ -106,17 +116,18 @@ void sendWorker::send(QString command){
 
 void sendWorker::writeToGPIO(QBitArray data) {
     qDebug() << "5";
-    packetSent = false;
+    digitalWrite(packetSent,LOW);
     qDebug() << "6";
     for(int i = 0; i < data.count(); i++) {
-        sendReady = true;
-        while(receiveReady == 0) {}
-        gpioData = data[i];
+        qDebug() << data[i];
+        digitalWrite(sendReady,HIGH);
+        while(digitalRead(receiveReady) == 0) {}
+        digitalWrite(gpioData,data[i]);
         //qDebug() << "Data sent: " << gpioData;
-        sendReady = false;
-        while(receiveReady == true) {}
+        digitalWrite(sendReady,LOW);
+        while(digitalRead(receiveReady) == 1) {}
 
     }
     //qDebug() << "12";
-    packetSent = 1;
+    digitalWrite(packetSent,HIGH);
 }

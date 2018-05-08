@@ -2,7 +2,7 @@
 #include <QDebug>
 
 #include <pthread.h>
-//#include <wiringPi.h>
+#include <wiringPi.h>
 
 #include "window.h"
 
@@ -20,8 +20,19 @@ int main(int argc, char *argv[])
 {
     // setup GPIO interface - uncomment when needed
     // needs to run with root via sudo in terminal.
-    //wiringPiSetup();
-    //pinMode (0, OUTPUT);
+    wiringPiSetup();
+    pinMode(27,INPUT);
+    pinMode(28,INPUT);
+    pinMode(29,INPUT);
+    pinMode(25,INPUT);
+    pinMode(21,OUTPUT);
+    pinMode(22,OUTPUT);
+    pinMode(23,OUTPUT);
+    pinMode(26,OUTPUT);
+    digitalWrite(21,HIGH);
+    digitalWrite(22,LOW);
+    digitalWrite(23,LOW);
+    digitalWrite(26,LOW);
 
     // setup Qt GUI
     QApplication a(argc, argv);

@@ -25,10 +25,6 @@ Window::Window(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    gpioData = 0;
-    sendReady = 0;
-    receiveReady = 0;
-    packetSent = 1;
 
     QThread *sendThread = new QThread;
     sendWorker *sendworker = new sendWorker;
