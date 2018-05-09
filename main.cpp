@@ -21,17 +21,25 @@ int main(int argc, char *argv[])
     // setup GPIO interface - uncomment when needed
     // needs to run with root via sudo in terminal.
     wiringPiSetup();
+    pullUpDnControl(27, PUD_UP);
+    pullUpDnControl(28, PUD_UP);
+    pullUpDnControl(7,PUD_UP);
+    pullUpDnControl(25,PUD_UP);
+    pullUpDnControl(21,PUD_UP);
+    pullUpDnControl(22,PUD_UP);
+    pullUpDnControl(23,PUD_UP);
+    pullUpDnControl(26,PUD_UP);
     pinMode(27,INPUT);
     pinMode(28,INPUT);
-    pinMode(29,INPUT);
+    pinMode(7,OUTPUT);
     pinMode(25,INPUT);
     pinMode(21,OUTPUT);
     pinMode(22,OUTPUT);
-    pinMode(23,OUTPUT);
+    pinMode(23,INPUT);
     pinMode(26,OUTPUT);
     digitalWrite(21,HIGH);
     digitalWrite(22,LOW);
-    digitalWrite(23,LOW);
+    digitalWrite(7,LOW);
     digitalWrite(26,LOW);
 
     // setup Qt GUI

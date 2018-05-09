@@ -10,7 +10,7 @@
 
 /*pinMode(21,OUTPUT);
 pinMode(22,OUTPUT);
-pinMode(23,OUTPUT);
+pinMode(7,OUTPUT);
 pinMode(26,OUTPUT);*/
 
 #define packetSent 21
@@ -115,11 +115,11 @@ void sendWorker::send(QString command){
 }
 
 void sendWorker::writeToGPIO(QBitArray data) {
-    qDebug() << "5";
+    //qDebug() << "5";
     digitalWrite(packetSent,LOW);
-    qDebug() << "6";
+    //qDebug() << "6";
     for(int i = 0; i < data.count(); i++) {
-        qDebug() << data[i];
+        //qDebug() << data[i];
         digitalWrite(sendReady,HIGH);
         while(digitalRead(receiveReady) == 0) {}
         digitalWrite(gpioData,data[i]);
@@ -130,4 +130,5 @@ void sendWorker::writeToGPIO(QBitArray data) {
     }
     //qDebug() << "12";
     digitalWrite(packetSent,HIGH);
+    digitalWrite(gpioData,LOW);
 }

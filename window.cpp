@@ -13,6 +13,7 @@
 #include <QThread>
 #include <QColorDialog>
 #include <QBuffer>
+#include <QCoreApplication>
 
 bool gpioData;
 bool sendReady;
@@ -26,9 +27,9 @@ Window::Window(QWidget *parent) :
     ui->setupUi(this);
     this->setAttribute(Qt::WA_DeleteOnClose);
 
-    QThread *sendThread = new QThread;
+
     sendWorker *sendworker = new sendWorker;
-    sendworker->moveToThread(sendThread);
+    sendworker->moveToThread(&sendThread);
     //connects here
     connect(this, SIGNAL(signalSendCanvasCleared()), sendworker, SLOT(sendTriggeredClear()), Qt::QueuedConnection);
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),sendworker,SLOT(sendMouseMoved(QPointF)), Qt::QueuedConnection);
@@ -36,24 +37,26 @@ Window::Window(QWidget *parent) :
     connect(&canvas_send,SIGNAL(signalRelease()), sendworker, SLOT(sendMouseReleased()), Qt::QueuedConnection);
     connect(this, SIGNAL(signalUpdateModifiers(QColor,QColor,int)),sendworker, SLOT(sendUpdateModifiers(QColor,QColor,int)), Qt::QueuedConnection);
 
-    QThread *receiveThread = new QThread;
+    //QThread *receiveThread = new QThread;
     receiveWorker *receiveworker = new receiveWorker;
-    receiveworker->moveToThread(receiveThread);
+    receiveworker->moveToThread(&receiveThread);
     connect(receiveworker, SIGNAL(rcvUpdateModifiers(QColor,QColor,int)), this, SLOT(receiveWindow_updateMods(QColor,QColor,int)), Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvClearWindow()), this, SLOT(receiveWindow_clearScreen()), Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvPenDown(int,int)),this,SLOT(receiveWindow_PenDown(int,int)),Qt::QueuedConnection);
     connect(receiveworker, SIGNAL(rcvMove(int,int)), this, SLOT(receiveWindow_Move(int,int)), Qt::QueuedConnection);
+    //connect(this, &Window::signalKillThread, receiveworker, &QThread::quit);
 
-    QThread *listenThread = new QThread;
+    //QThread *listenThread = new QThread;
     listenWorker *listenworker = new listenWorker;
-    listenworker->moveToThread(listenThread);
+    listenworker->moveToThread(&listenThread);
     //connects
     connect(listenworker, SIGNAL(packetOut(QBitArray)), receiveworker, SLOT(receivePacket(QBitArray)), Qt::QueuedConnection);
-    connect(listenThread, &QThread::started, listenworker, &listenWorker::exec);
+    connect(&listenThread, &QThread::started, listenworker, &listenWorker::exec);
+    //connect(this, SIGNAL(signalKillThread()), listenworker, &QThread::quit);
 
-    sendThread->start();
-    receiveThread->start();
-    listenThread->start();
+    sendThread.start();
+    receiveThread.start();
+    listenThread.start();
 
     connect(&canvas_send,SIGNAL(signalMouseCoord(QPointF)),this,SLOT(sendWindow_mouseMoved(QPointF)));
     connect(&canvas_send,SIGNAL(signalPressCoord(QPointF)),this,SLOT(sendWindow_mousePressed(QPointF)));
@@ -70,20 +73,22 @@ Window::Window(QWidget *parent) :
 
 Window::~Window()
 {
+    //listenworker->exitLoop();
+    sendThread.quit();
+    sendThread.wait();
+    receiveThread.quit();
+    receiveThread.wait();
+    listenThread.quit();
+    listenThread.wait();
     delete ui;
-    sendThread->quit();
-    receiveThread->quit();
-    listenThread->quit();
+    QCoreApplication::quit();
 }
 
 void Window::on_actionQuit_triggered()
 {
     int exitChoice = QMessageBox::warning(this, tr("Quit"), tr("Are you sure?"), QMessageBox::No | QMessageBox::Yes);
         if(exitChoice == QMessageBox::Yes){
-            sendThread->quit();
-            receiveThread->quit();
-            listenThread->quit();
-            QApplication::quit();
+            QCoreApplication::quit();
         }
 }
 

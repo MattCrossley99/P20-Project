@@ -10,7 +10,7 @@ pinMode(25,INPUT);*/
 
 #define packetSent 27
 #define sendReady 28
-#define receiveReady 29
+#define receiveReady 7
 #define gpioData 25
 
 /*extern bool gpioData;
@@ -30,29 +30,35 @@ int listenWorker::exec() {
     int pos = 0;
     while(1) {
         pos = 0;
+        bool errorFlag = 0;
         //receiveStack.fill(false);
-        while(digitalRead(packetSent) == 0) {
-            qDebug() << "1";
-            while (digitalRead(sendReady) == 0) {}
+        while((digitalRead(packetSent) == 0) && (errorFlag == 0)) {
+            //qDebug() << "1";
+            while ((digitalRead(sendReady) == 0)) {}
             digitalWrite(receiveReady,HIGH);
-            while(digitalRead(sendReady) == 1) {}
+            while((digitalRead(sendReady) == 1)) {}
             receiveStack.setBit(pos,digitalRead(gpioData));
             pos++;
             if (pos > 144){
                 pos = 0;
-                break;
+                qDebug() << "Something Broke THIS IS A SUPER LONG AND REALLY VISIBLE LINE";
+                errorFlag = 1;
             }
             digitalWrite(receiveReady,LOW);
-            qDebug() << "i am a debug";
-
+            qDebug() << "Magical Debug";
         }
-        //emit packetOut(receiveStack);
-        //receiveStack.fill(false);
-        if((pos==32) | (pos == 80) | (pos == 144)){
+        if((pos > 10) && errorFlag == 0){
             pos = 0;
             //qDebug() << receiveStack;
-            emit packetOut(receiveStack);
+            emit packetOut(receiveStack);     
         }
         pos = 0;
+        receiveStack.fill(false);
     }
+    //loopexited = 1;
 }
+
+/*void listenWorker::exitLoop() {
+    quitflag = 1;
+    while(loopexited == 0) {}
+}*/

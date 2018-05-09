@@ -4,7 +4,9 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include <QPen>
+#include <QThread>
 #include "advancedScene.h"
+#include "listenWorker.h"
 
 namespace Ui {
 class Window;
@@ -21,6 +23,7 @@ public:
 signals:
     void signalSendCanvasCleared();
     void signalUpdateModifiers(QColor pen, QColor bg, int width);
+    void signalKillThread();
     
 private slots:
     void on_actionQuit_triggered();
@@ -57,6 +60,9 @@ private:
     qreal rcvPrevY = 0;
     QColor penColour;
     QColor send_backgroundColour;
+    QThread sendThread;
+    QThread receiveThread;
+    QThread listenThread;
 };
 
 #endif // WINDOW_H
