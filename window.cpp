@@ -24,7 +24,7 @@ Window::Window(QWidget *parent) :
     ui(new Ui::Window)
 {
     ui->setupUi(this);
-
+    this->setAttribute(Qt::WA_DeleteOnClose);
 
     QThread *sendThread = new QThread;
     sendWorker *sendworker = new sendWorker;
@@ -71,12 +71,18 @@ Window::Window(QWidget *parent) :
 Window::~Window()
 {
     delete ui;
+    sendThread->quit();
+    receiveThread->quit();
+    listenThread->quit();
 }
 
 void Window::on_actionQuit_triggered()
 {
     int exitChoice = QMessageBox::warning(this, tr("Quit"), tr("Are you sure?"), QMessageBox::No | QMessageBox::Yes);
         if(exitChoice == QMessageBox::Yes){
+            sendThread->quit();
+            receiveThread->quit();
+            listenThread->quit();
             QApplication::quit();
         }
 }
