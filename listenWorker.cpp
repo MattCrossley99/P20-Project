@@ -28,15 +28,15 @@ int listenWorker::exec() {
     QBitArray receiveStack;
     receiveStack.resize(150);
     int pos = 0;
-    while(1) {
+    while(quitflag == 0) {
         pos = 0;
         bool errorFlag = 0;
         //receiveStack.fill(false);
-        while((digitalRead(packetSent) == 0) && (errorFlag == 0)) {
+        while((digitalRead(packetSent) == 0) && (errorFlag == 0) && (quitflag == 0)) {
             //qDebug() << "1";
-            while ((digitalRead(sendReady) == 0)) {}
+            while ((digitalRead(sendReady) == 0) && (quitflag == 0)) {}
             digitalWrite(receiveReady,HIGH);
-            while((digitalRead(sendReady) == 1)) {}
+            while((digitalRead(sendReady) == 1) && (quitflag == 0)) {}
             receiveStack.setBit(pos,digitalRead(gpioData));
             pos++;
             if (pos > 144){
@@ -47,7 +47,7 @@ int listenWorker::exec() {
             digitalWrite(receiveReady,LOW);
             qDebug() << "Magical Debug";
         }
-        if((pos > 10) && errorFlag == 0){
+        if((pos > 10) && (errorFlag == 0) && (quitflag == 0)){
             pos = 0;
             //qDebug() << receiveStack;
             emit packetOut(receiveStack);     
@@ -55,10 +55,12 @@ int listenWorker::exec() {
         pos = 0;
         receiveStack.fill(false);
     }
-    //loopexited = 1;
+    loopexited = 1;
+    qDebug() << "Exited loop";
 }
 
-/*void listenWorker::exitLoop() {
+void listenWorker::exitLoop() {
     quitflag = 1;
+    qDebug() << "Exiting listenThread";
     while(loopexited == 0) {}
-}*/
+}

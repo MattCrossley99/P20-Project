@@ -63,6 +63,7 @@ private:
     QThread sendThread;
     QThread receiveThread;
     QThread listenThread;
+    listenWorker *listenworker;
 };
 
 #endif // WINDOW_H

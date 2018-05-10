@@ -47,7 +47,7 @@ Window::Window(QWidget *parent) :
     //connect(this, &Window::signalKillThread, receiveworker, &QThread::quit);
 
     //QThread *listenThread = new QThread;
-    listenWorker *listenworker = new listenWorker;
+    listenworker = new listenWorker;
     listenworker->moveToThread(&listenThread);
     //connects
     connect(listenworker, SIGNAL(packetOut(QBitArray)), receiveworker, SLOT(receivePacket(QBitArray)), Qt::QueuedConnection);
@@ -73,7 +73,7 @@ Window::Window(QWidget *parent) :
 
 Window::~Window()
 {
-    //listenworker->exitLoop();
+    listenworker->exitLoop();
     sendThread.quit();
     sendThread.wait();
     receiveThread.quit();
@@ -81,7 +81,7 @@ Window::~Window()
     listenThread.quit();
     listenThread.wait();
     delete ui;
-    QCoreApplication::quit();
+    //QCoreApplication::quit();
 }
 
 void Window::on_actionQuit_triggered()

@@ -10,14 +10,14 @@ class listenWorker : public QObject
     Q_OBJECT
 public:
     explicit listenWorker(QObject *parent = 0);
-    //void exitLoop();
+    void exitLoop();
 signals:
     void packetOut(QBitArray output);
 public slots:
         int exec();
 private:
-       // bool quitflag = 0;
-        //bool loopexited = 0;
+       bool quitflag = 0;
+       bool loopexited = 0;
 
 };
 
